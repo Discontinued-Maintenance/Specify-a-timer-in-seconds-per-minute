@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+from pygame import mixer
 import threading
 import datetime
 import time
@@ -48,7 +49,13 @@ while True:
         threading.Thread(target=ifTime, args=(lambda : stop_flag,)).start()
 
     if event == 'thread task done':
-        sg.Popup('現在時間：' + str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')), title='System Message', keep_on_top=False, icon=iconBase64)
+        try:
+            mixer.init()
+            mixer.music.load("./music/music.mp3")
+            mixer.music.play()
+            sg.Popup('現在時間：' + str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')), title='System Message', keep_on_top=True, icon=iconBase64, auto_close_duration=3, auto_close=True)
+        except:
+            sg.Popup("音效檔設定錯誤請確認音效放置位及名稱為：music/music.mp3", title='System Message', keep_on_top=True, icon=iconBase64)
 
     if event == 'Exit':
         stop_flag = True  
@@ -56,7 +63,7 @@ while True:
 
     if event == 'Setting':
         Second = values['-Second-'].split('第')[1].split('秒')[0]
-        sg.Popup('秒數設定成功！', title='System Message', keep_on_top=False, icon=iconBase64)
+        sg.Popup('秒數設定成功！', title='System Message', keep_on_top=False, icon=iconBase64, auto_close_duration=3, auto_close=True)
     
     window['text'].update(datetime.datetime.now().strftime('%H:%M:%S'))
 
